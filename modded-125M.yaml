@@ -1,0 +1,31 @@
+# sky launch skypilot/modded-125M.yaml --env HF_TOKEN=$HF_TOKEN --env WANDB_API_KEY=$WANDB_API_KEY
+name: run-nanogpt-speedrun
+
+resources:
+  cloud: lambda
+  accelerators: H100:8
+  #  instance_type: gpu_1x_h100_sxm5
+#  region: us-south-2
+  # The above is a shorthand for <name>: <count=1>.  Same as:
+  # accelerators: V100:1
+
+#workdir: .
+
+#file_mounts:
+#  /remote/judgetuning: ~/Documents/code/judgetuning/judgetuning
+#  /remote/requirements.txt: ~/Documents/code/judgetuning/requirements.txt
+
+# The setup command.  Will be run under the working directory.
+setup: |  
+  git clone https://github.com/KellerJordan/modded-nanogpt.git && cd modded-nanogpt
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  uv init .
+  uv pip install -r requirements.txt
+  uv pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cu126 --upgrade
+  # downloads only the first 800M training tokens to save time
+  uv pip install hf_transfer
+  HF_HUB_ENABLE_HF_TRANSFER=1 python data/cached_fineweb10B.py 8
+#  HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download --repo-type model neuralmagic/Meta-Llama-3.
+run: |
+  cd modded-nanogpt
+  ./run.sh
