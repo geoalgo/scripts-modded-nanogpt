@@ -38,9 +38,9 @@ uv run sky launch modded-125M.yaml
 
 ## 📊 Performance
 
-- **Training time**: 2.91 minutes
+- **Training time**: 2.856 minutes
 - **Hardware**: 8×H100 GPUs via [Lambda Labs](https://cloud.lambda.ai/)
-- **Estimated cost**: ~$XX per run
+- **Estimated cost**: ~$3 ($1.2 for training the rest for installing dependencies and downloading dataset)
 
 ## 🛠 Configuration
 
