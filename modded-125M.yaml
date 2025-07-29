@@ -17,15 +17,15 @@ resources:
 
 # The setup command.  Will be run under the working directory.
 setup: |  
-  git clone https://github.com/KellerJordan/modded-nanogpt.git && cd modded-nanogpt
+  git clone https://github.com/geoalgo/scripts-modded-nanogpt && cd scripts-modded-nanogpt
   curl -LsSf https://astral.sh/uv/install.sh | sh
-  uv init .
+  uv init . --python 3.11  # requires at least python 3.10
   uv pip install -r requirements.txt
   uv pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cu126 --upgrade
   # downloads only the first 800M training tokens to save time
   uv pip install hf_transfer
-  HF_HUB_ENABLE_HF_TRANSFER=1 python data/cached_fineweb10B.py 8
+  HF_HUB_ENABLE_HF_TRANSFER=1 uv python data/cached_fineweb10B.py 8
 #  HF_HUB_ENABLE_HF_TRANSFER=1 huggingface-cli download --repo-type model neuralmagic/Meta-Llama-3.
 run: |
   cd modded-nanogpt
-  ./run.sh
+  uv run torchrun --standalone --nproc_per_node=4 train_gpt.py
