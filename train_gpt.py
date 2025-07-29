@@ -839,6 +839,10 @@ class Hyperparameters:
 
 args = Hyperparameters()
 
+from pprint import pprint
+print(f"Running with following hyperparameters")
+pprint(args.__dict__, sort_dicts=False, indent=2)
+
 data_path = os.environ.get("DATA_PATH", ".")
 args.train_files = os.path.join(data_path, args.train_files)
 args.val_files = os.path.join(data_path, args.val_files)
@@ -982,6 +986,10 @@ for step in range(train_steps + 1):
         del val_loader
         dist.all_reduce(val_loss, op=dist.ReduceOp.AVG)
         print0(f"step:{step}/{train_steps} val_loss:{val_loss:.4f} train_time:{training_time_ms:.0f}ms step_avg:{training_time_ms/max(step, 1):.2f}ms", console=True)
+
+        metric = {"val_loss": val_loss, "iteration": step}
+        print0(f'[tune-metric]: {metric}')
+
         model.train()
         # start the clock again
         torch.cuda.synchronize()
