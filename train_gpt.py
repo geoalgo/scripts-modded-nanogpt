@@ -818,24 +818,24 @@ def distributed_data_generator(filename_pattern: str, seq_len: int, grad_accum_s
 @dataclass
 class Hyperparameters:
     # data
-    train_files = "data/fineweb10B/fineweb_train_*.bin" # input .bin to train on
-    val_files = "data/fineweb10B/fineweb_val_*.bin" # input .bin to eval validation loss on
-    val_tokens = 10485760 # how many tokens of validation data? it's important to keep this fixed for consistent comparisons
-    train_seq_len = 48*1024 # FlexAttention sequence length
-    val_seq_len = 4*64*1024 # FlexAttention sequence length for validation
+    train_files: str = "data/fineweb10B/fineweb_train_*.bin" # input .bin to train on
+    val_files: str = "data/fineweb10B/fineweb_val_*.bin" # input .bin to eval validation loss on
+    val_tokens: int = 10485760 # how many tokens of validation data? it's important to keep this fixed for consistent comparisons
+    train_seq_len: int = 48*1024 # FlexAttention sequence length
+    val_seq_len: int = 4*64*1024 # FlexAttention sequence length for validation
     # optimization
-    num_iterations = 1750 # number of iterations to run
-    cooldown_frac = 0.45 # fraction of training spent cooling down the learning rate
+    num_iterations: int = 1750 # number of iterations to run
+    cooldown_frac: float = 0.45 # fraction of training spent cooling down the learning rate
     # evaluation and logging
-    val_loss_every = 125 # every how many steps to evaluate val loss? 0 for only at the end
-    save_checkpoint = False
-    adam_lr = 0.008
-    adam_beta1 = 0.8
-    adam_beta2 = 0.95
-    muon_lr = 0.05
-    muon_momentum = 0.95
-    max_window_size = 1728
-    min_window_size = 128
+    val_loss_every: int = 125 # every how many steps to evaluate val loss? 0 for only at the end
+    save_checkpoint: bool = False
+    adam_lr: float = 0.008
+    adam_beta1: float = 0.8
+    adam_beta2: float = 0.95
+    muon_lr: float = 0.05
+    muon_momentum: float = 0.95
+    max_window_size: int = 1728
+    min_window_size: int = 128
 
 args = Hyperparameters()
 
