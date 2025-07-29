@@ -21,7 +21,7 @@ These instructions use `uv` but are easily adaptable to conda or pip.
 - Access to 8×H100 GPUs configured to some cloud provider, see [Skypilot instructions](https://docs.skypilot.co/en/latest/getting-started/installation.html)
 - `uv` installed, see [uv doc](https://docs.astral.sh/uv/getting-started/installation/) to install it or adapt instructions to conda/pip
 
-### Setup and Launch
+### Setup to launch with Slurmpilot
 
 ```bash
 # Clone the repository
@@ -35,6 +35,28 @@ uv add skypilot
 # Launch training instance
 uv run sky launch modded-125M.yaml
 ```
+
+### Setup to launch directly in a GPU node
+
+```bash
+# Clone the repository
+git clone https://github.com/geoalgo/scripts-modded-nanogpt.git
+cd scripts-modded-nanogpt
+
+git checkout hpo
+
+# Initialize environment and install dependencies
+uv init . --python 3.11
+uv sync
+uv pip install -r requirements.txt
+uv pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cu126 --upgrade
+
+# Launch training instance
+uv run sky launch modded-125M.yaml
+```
+
+
+
 
 ## 📊 Performance
 

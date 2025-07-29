@@ -829,6 +829,14 @@ class Hyperparameters:
     # evaluation and logging
     val_loss_every = 125 # every how many steps to evaluate val loss? 0 for only at the end
     save_checkpoint = False
+    adam_lr = 0.008
+    adam_beta1 = 0.8
+    adam_beta2 = 0.95
+    muon_lr = 0.05
+    muon_momentum = 0.95
+    max_window_size = 1728
+    min_window_size = 128
+
 args = Hyperparameters()
 
 data_path = os.environ.get("DATA_PATH", ".")
@@ -890,8 +898,8 @@ head_params = [model.lm_head.weight]
 # init the optimizer(s)
 # small adam epsilon by @YouJiacheng. this is an alternate method of fixing the world_size dependence
 # discovered by @fernbear.bsky.social https://x.com/hi_tysam/status/1879692937589875094
-optimizer1 = DistAdam(scalar_params + head_params + embed_params, lr=0.008, betas=(0.8, 0.95), eps=1e-10, weight_decay=0.0)
-optimizer2 = Muon(hidden_matrix_params, lr=0.05, momentum=0.95, weight_decay=0.0)
+optimizer1 = DistAdam(scalar_params + head_params + embed_params, lr=args.adam_lr, betas=(args.adam_beta1, args.adam_beta2), eps=1e-10, weight_decay=0.0)
+optimizer2 = Muon(hidden_matrix_params, lr=args.muon_lr, momentum=args.muon_momentum, weight_decay=0.0)
 optimizers = [optimizer1, optimizer2]
 for opt in optimizers:
     for group in opt.param_groups:
@@ -916,7 +924,7 @@ def get_window_size_blocks(step: int):
     assert 0 <= x <= 1
     # Linearly increase the block-wise sliding window size over training 128 -> 1792
     # increase by @fernbear.bsky.social; block-wise by @YouJiacheng
-    window_size = next_multiple_of_n(1728 * x, n=128)
+    window_size = next_multiple_of_n(args.max_window_size * x, n=args.min_window_size)
     return get_window_size_blocks_helper(window_size)
 
 model: nn.Module = torch.compile(model, dynamic=False, fullgraph=True)
