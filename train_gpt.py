@@ -881,7 +881,7 @@ print0(f"Running PyTorch {torch.version.__version__} compiled for CUDA {torch.ve
 print0(f"Running Triton version {triton.__version__}")
 
 print0(f"Running with following hyperparameters")
-pprint(args.__dict__, sort_dicts=False, indent=2)
+print0(args.__dict__, sort_dicts=False, indent=2)
 
 def nvidia_smi():
     import subprocess  # avoid top level import
@@ -969,6 +969,9 @@ t0 = time.perf_counter()
 train_steps = args.num_iterations
 for step in range(train_steps + 1):
     last_step = (step == train_steps)
+
+    metric = {"val_loss": 0.1, "iteration": step // args.val_loss_every}
+    print0(f'[tune-metric]: {metric}')
 
     # --------------- VALIDATION SECTION -----------------
     if last_step or (args.val_loss_every > 0 and step % args.val_loss_every == 0):
