@@ -1,3 +1,4 @@
+from pprint import pprint
 import os
 import sys
 with open(sys.argv[0]) as f:
@@ -778,7 +779,7 @@ def find_batch_starts(tokens: Tensor, pos: int, seq_len: int, token_window: int)
     start = boundary_positions[0].item()
     starts = []
     for i in range(1, len(boundary_positions)):
-        end = boundary_positions[i].item() 
+        end = boundary_positions[i].item()
         if end - start >= seq_len:
             starts.append(start) # append start once end pos is confirmed
             if len(starts) == dist.get_world_size():
@@ -839,9 +840,6 @@ class Hyperparameters:
 
 args = Hyperparameters()
 
-from pprint import pprint
-print(f"Running with following hyperparameters")
-pprint(args.__dict__, sort_dicts=False, indent=2)
 
 data_path = os.environ.get("DATA_PATH", ".")
 args.train_files = os.path.join(data_path, args.train_files)
@@ -876,10 +874,15 @@ def print0(s, console=False):
 # begin by printing this file (the Python code)
 print0(code)
 print0("="*100)
+
 # log information about the hardware/software environment this is running on
 print0(f"Running Python {sys.version}")
 print0(f"Running PyTorch {torch.version.__version__} compiled for CUDA {torch.version.cuda}")
 print0(f"Running Triton version {triton.__version__}")
+
+print0(f"Running with following hyperparameters")
+pprint(args.__dict__, sort_dicts=False, indent=2)
+
 def nvidia_smi():
     import subprocess  # avoid top level import
     return subprocess.run(["nvidia-smi"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True).stdout
@@ -985,10 +988,10 @@ for step in range(train_steps + 1):
         val_loss /= val_steps
         del val_loader
         dist.all_reduce(val_loss, op=dist.ReduceOp.AVG)
-        print0(f"step:{step}/{train_steps} val_loss:{val_loss:.4f} train_time:{training_time_ms:.0f}ms step_avg:{training_time_ms/max(step, 1):.2f}ms", console=True)
-
         metric = {"val_loss": val_loss, "iteration": step // args.val_loss_every}
         print0(f'[tune-metric]: {metric}')
+
+        print0(f"step:{step}/{train_steps} val_loss:{val_loss:.4f} train_time:{training_time_ms:.0f}ms step_avg:{training_time_ms/max(step, 1):.2f}ms", console=True)
 
         model.train()
         # start the clock again
