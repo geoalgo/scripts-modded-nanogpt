@@ -971,7 +971,7 @@ for step in range(train_steps + 1):
     last_step = (step == train_steps)
 
     metric = {"val_loss": 0.1, "iteration": step // args.val_loss_every}
-    print0(f'[tune-metric]: {metric}')
+    print(f'[tune-metric]: {metric}')
 
     # --------------- VALIDATION SECTION -----------------
     if last_step or (args.val_loss_every > 0 and step % args.val_loss_every == 0):
