@@ -881,7 +881,7 @@ print0(f"Running PyTorch {torch.version.__version__} compiled for CUDA {torch.ve
 print0(f"Running Triton version {triton.__version__}")
 
 print0(f"Running with following hyperparameters")
-print0(args.__dict__, sort_dicts=False, indent=2)
+print0(args.__dict__)
 
 def nvidia_smi():
     import subprocess  # avoid top level import
