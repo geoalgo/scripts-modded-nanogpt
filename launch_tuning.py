@@ -28,7 +28,7 @@ config_space = {
 
 scheduler = ASHACQR(
     config_space,
-    metric="mean_loss",
+    metric="val_loss",
     time_attr="iteration",
     # 1770 / 125
     max_t=15,
