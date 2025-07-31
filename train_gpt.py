@@ -992,10 +992,10 @@ for step in range(train_steps + 1):
         val_loss /= val_steps
         del val_loader
         dist.all_reduce(val_loss, op=dist.ReduceOp.AVG)
-        metric = {"val_loss": val_loss.item(), "iteration": step // args.val_loss_every}
 
         if master_process:
-            reporter(val_loss=val_loss.item(), train_time=training_time_ms/max(step, 1))
+            iteration = step // args.val_loss_every
+            reporter(val_loss=val_loss.item(), iteration=iteration, train_time=training_time_ms/max(step, 1))
 
         model.train()
         # start the clock again
