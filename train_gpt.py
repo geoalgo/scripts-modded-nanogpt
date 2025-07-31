@@ -1,3 +1,4 @@
+import json
 from pprint import pprint
 import os
 import sys
@@ -990,7 +991,8 @@ for step in range(train_steps + 1):
         del val_loader
         dist.all_reduce(val_loss, op=dist.ReduceOp.AVG)
         metric = {"val_loss": val_loss.item(), "iteration": step // args.val_loss_every}
-        print0(f'[tune-metric]: {metric}', console=True)
+
+        print0(f'[tune-metric]: {json.dumps(metric)}', console=True)
         print0(f"step:{step}/{train_steps} val_loss:{val_loss:.4f} train_time:{training_time_ms:.0f}ms step_avg:{training_time_ms/max(step, 1):.2f}ms", console=True)
 
         model.train()
