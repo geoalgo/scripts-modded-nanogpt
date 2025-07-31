@@ -997,8 +997,6 @@ for step in range(train_steps + 1):
         # TODO handle print0?
         reporter(val_loss=val_loss.item(), train_time=training_time_ms/max(step, 1))
 
-        print0(f"step:{step}/{train_steps} val_loss:{val_loss:.4f} train_time:{training_time_ms:.0f}ms step_avg:{training_time_ms/max(step, 1):.2f}ms", console=True)
-
         model.train()
         # start the clock again
         torch.cuda.synchronize()
