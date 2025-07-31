@@ -29,7 +29,7 @@ config_space = {
 scheduler = ASHACQR(
     config_space,
     metric="val_loss",
-    time_attr="iteration",
+    time_attr="st_worker_iter",
     # 1770 / 125
     max_t=15,
     points_to_evaluate=[
