@@ -994,8 +994,8 @@ for step in range(train_steps + 1):
         dist.all_reduce(val_loss, op=dist.ReduceOp.AVG)
         metric = {"val_loss": val_loss.item(), "iteration": step // args.val_loss_every}
 
-        # TODO handle print0?
-        reporter(val_loss=val_loss.item(), train_time=training_time_ms/max(step, 1))
+        if master_process:
+            reporter(val_loss=val_loss.item(), train_time=training_time_ms/max(step, 1))
 
         model.train()
         # start the clock again
