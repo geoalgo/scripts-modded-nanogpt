@@ -46,7 +46,7 @@ scheduler = ASHACQR(
 # TODO Handle nan
 entry_point = str(Path(__file__).parent / "train_gpt.py")
 tuner = Tuner(
-    trial_backend=LocalBackend(entry_point=entry_point),
+    trial_backend=LocalBackend(entry_point=entry_point, binary="torchrun --standalone --nproc_per_node=4"),
     scheduler=scheduler,
     stop_criterion=StoppingCriterion(max_wallclock_time=3600 * 12),
     n_workers=1,  # how many trials are evaluated in parallel
