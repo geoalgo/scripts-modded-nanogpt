@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from syne_tune import Tuner, StoppingCriterion
@@ -43,6 +44,7 @@ scheduler = ASHACQR(
     ],
 )
 
+logging.getLogger().setLevel(logging.DEBUG)
 # TODO Handle nan
 entry_point = str(Path(__file__).parent / "train_gpt.py")
 tuner = Tuner(
